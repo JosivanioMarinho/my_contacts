@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 
 class HomePage extends StatefulWidget {
@@ -6,6 +7,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  String _email = "";
+
+  Future _login() async {
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    FirebaseUser user = await auth.currentUser();
+    setState(() {
+      _email = user.email;
+    });
+  }
+
+  @override
+  void initState() {
+    _login();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +33,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("Home"),
       ),
       body: Container(
-        child: Text("Hello world!"),
+        child: Text(_email),
       ),
     );
   }

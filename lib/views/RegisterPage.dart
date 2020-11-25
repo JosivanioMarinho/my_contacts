@@ -147,7 +147,15 @@ class _RegisterPageState extends State<RegisterPage> {
                         },
                       ),
                       SizedBox(height: 10,),
-                      Text( _errorMessage ),
+                      Center(
+                        child: Text(
+                          _errorMessage, 
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

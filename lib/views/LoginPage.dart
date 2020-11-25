@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:meus_contatos/controllers/LoginUserController.dart';
+import 'package:meus_contatos/models/User.dart';
 import 'package:meus_contatos/views/RegisterPage.dart';
 import 'package:meus_contatos/widgets/CustomTextField.dart';
 
@@ -8,6 +10,55 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  TextEditingController _controllerEmail = TextEditingController();
+  TextEditingController _controllerPassword = TextEditingController();
+  LoginUserController _loginUser = LoginUserController();
+  String _errorMessage = "";
+
+  _validateFields(){
+    
+    String email = _controllerEmail.text;
+    String password = _controllerPassword.text;
+
+    if( email.isNotEmpty && email.contains("@") ){
+
+        if( password.isNotEmpty ){
+
+          setState(() {
+            _errorMessage = "";
+          });
+
+          //CRegister user
+          User user = User();
+          user.email = email;
+          user.password = password;
+
+          //User login
+          _loginUser.loginUser(user, context);
+
+          //Error message
+          setState(() {
+            _errorMessage = _loginUser.errorMessage();
+          });
+
+        }else{
+          setState(() {
+            _errorMessage = "Fill up the password!";
+          });
+        }
+      }else{
+        setState(() {
+          _errorMessage = "Invalid e-mail!";
+        });
+      }
+  }
+
+  @override
+  void initState() {
+    _loginUser.checkLogin(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       CustomTextField(
+                        controllerEmail: _controllerEmail,
                         hint: "E-mail", 
                         icon: Icon(
                           Icons.email,
@@ -55,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       CustomTextField(
+                        controllerPassword: _controllerPassword,
                         hint: "Password", 
                         obscure: true,
                         icon: Icon(
@@ -87,7 +140,9 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        onTap: (){},
+                        onTap: (){
+                          _validateFields();
+                        },
                       ),
                       SizedBox(height: 10,),
                       Center(
@@ -120,6 +175,15 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(height: 10,),
+                      Center(
+                        child: Text(
+                          _errorMessage, 
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
