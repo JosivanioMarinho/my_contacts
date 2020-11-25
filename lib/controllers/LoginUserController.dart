@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:meus_contatos/controllers/RouteGenerator.dart';
 import 'package:meus_contatos/models/User.dart';
 import 'package:meus_contatos/views/HomePage.dart';
 
@@ -16,10 +17,7 @@ class LoginUserController{
       password: user.password
     ).then((firebaseUser) {
 
-      Navigator.push(
-        context, 
-        MaterialPageRoute(builder: (_)=> HomePage())
-      );
+      Navigator.pushReplacementNamed(context, RouteGenerator.HOME_ROUTE);
     }).catchError((error){
 
       _errorMessage = "Error when signing in, check the filds";
@@ -37,10 +35,7 @@ class LoginUserController{
 
     FirebaseUser user = await auth.currentUser();
     if( user != null ){
-      Navigator.push(
-        context, 
-        MaterialPageRoute(builder: (_)=> HomePage())
-      );
+      Navigator.pushReplacementNamed(context, RouteGenerator.HOME_ROUTE);
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meus_contatos/controllers/LoginUserController.dart';
+import 'package:meus_contatos/controllers/RouteGenerator.dart';
 import 'package:meus_contatos/models/User.dart';
 import 'package:meus_contatos/views/RegisterPage.dart';
 import 'package:meus_contatos/widgets/CustomTextField.dart';
@@ -158,10 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             GestureDetector(
                               onTap: (){
-                                Navigator.push(
-                                  context, 
-                                  MaterialPageRoute(builder: (_)=> RegisterPage())
-                                );
+                                Navigator.pushNamed(context, RouteGenerator.REGISTER_ROUTE);
                               },
                               child: Text(
                                 "register",
