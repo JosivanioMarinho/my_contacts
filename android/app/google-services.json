@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "489569385495",
+    "firebase_url": "https://my-contacts-4f611.firebaseio.com",
+    "project_id": "my-contacts-4f611",
+    "storage_bucket": "my-contacts-4f611.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489569385495:android:d92d00d2a9f7e6224df052",
+        "android_client_info": {
+          "package_name": "com.example.meus_contatos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "489569385495-jhqb0ojq0slfgv6djqse1moba50nsdn8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLItwc7OZbt4rh34gt9nlyV9qIGPvKvo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "489569385495-jhqb0ojq0slfgv6djqse1moba50nsdn8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

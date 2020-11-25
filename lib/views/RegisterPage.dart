@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:meus_contatos/controllers/RegisterUserController.dart';
+import 'package:meus_contatos/models/User.dart';
 import 'package:meus_contatos/widgets/CustomTextField.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -7,6 +9,55 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+
+  TextEditingController _controllerName = TextEditingController();
+  TextEditingController _controllerEmail = TextEditingController();
+  TextEditingController _controllerPassword = TextEditingController();
+
+  String _errorMessage = "";
+
+  _validateFields(){
+    
+    String name = _controllerName.text;
+    String email = _controllerEmail.text;
+    String password = _controllerPassword.text;
+
+    if( name.isNotEmpty ){
+
+      if( email.isNotEmpty && email.contains("@") ){
+
+        if( password.isNotEmpty && password.length > 6){
+
+          setState(() {
+            _errorMessage = "";
+          });
+
+          //CRegister user
+          User user = User();
+          user.email = email;
+          user.password = password;
+
+          //Passes the user to the page restration class
+          RegisterUserController registerUserController = RegisterUserController();
+          registerUserController.registerUser(user, context);
+
+        }else{
+          setState(() {
+            _errorMessage = "Fill up the password! Enter more than 6 characters";
+          });
+        }
+      }else{
+        setState(() {
+          _errorMessage = "Invalid e-mail!";
+        });
+      }
+    }else{
+      setState(() {
+        _errorMessage = "The name is empty!";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,13 +96,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           height: 70,
                         ),
                       ),
-                      CustomTextField(hint: "User name",),
+                      CustomTextField(
+                        hint: "User name",
+                        controllerName: _controllerName,
+                      ),
                       CustomTextField(
                         hint: "E-mail", 
                         icon: Icon(
                           Icons.email,
                           color: Color(0xff1D3557),
                         ),
+                        controllerEmail: _controllerEmail,
                       ),
                       CustomTextField(
                         hint: "Password", 
@@ -60,6 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           Icons.lock,
                           color: Color(0xff1D3557),
                         ),
+                        controllerPassword: _controllerPassword,
                       ),
                       SizedBox(height: 20,),
                       InkWell(
@@ -86,9 +142,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                         ),
-                        onTap: (){},
+                        onTap: (){
+                          _validateFields();
+                        },
                       ),
                       SizedBox(height: 10,),
+                      Text( _errorMessage ),
                     ],
                   ),
                 ),
