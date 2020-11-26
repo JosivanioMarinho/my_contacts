@@ -8,8 +8,47 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  List<String> contatcList = [
+    "João",
+    "Maria",
+    "Julia",
+    "Pedro",
+    "Carlinhos",
+    "Paulo",
+    "José",
+    "Rafaela",
+    "Juliana",
+    "Miguel",
+    "João Pedro",
+    "Carlos",
+    "Ricardo",
+    "Etc",
+  ];
+
   @override
   Widget build(BuildContext context) {
+
+    var listContacts = Expanded(
+      child: ListView.builder(
+        itemCount: contatcList.length,
+        itemBuilder: (context, index){
+          
+          String title = contatcList[index];
+
+          return ListTile(
+            contentPadding: EdgeInsets.only(left: 16 ,top: 10, right: 16),
+            leading: Image.asset("images/042-solar-system.png", width: 60,),
+            title: Text(
+              title, 
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+              ),
+            ),
+          );
+        }
+      ),
+    );
 
     return Scaffold(
       backgroundColor: Color(0xff457B9D),
@@ -19,6 +58,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: <Widget>[
                 CustomAppBar(),
+                listContacts,
               ],
             ),
           )

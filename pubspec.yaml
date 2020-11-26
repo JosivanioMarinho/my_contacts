@@ -55,6 +55,15 @@ flutter:
   assets:
    - images/astronaut.png
    - images/rocket.png
+   - images/050-planet-earth.png
+   - images/049-venus.png
+   - images/048-space.png
+   - images/047-meteorite.png
+   - images/046-satellite.png
+   - images/045-space-shuttle.png
+   - images/044-footprint.png
+   - images/042-solar-system.png
+   - images/039-mars.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
