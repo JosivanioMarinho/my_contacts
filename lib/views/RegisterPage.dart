@@ -34,6 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
           //CRegister user
           User user = User();
+          user.name = name;
           user.email = email;
           user.password = password;
 

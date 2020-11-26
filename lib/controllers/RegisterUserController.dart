@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meus_contatos/controllers/RouteGenerator.dart';
 import 'package:meus_contatos/models/User.dart';
 import 'package:flutter/material.dart';
-import 'package:meus_contatos/views/HomePage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterUserController{
 
@@ -15,11 +15,18 @@ class RegisterUserController{
       password: user.password,
     ).then((firebaseUser) {
 
-        Navigator.pushNamedAndRemoveUntil(
-          context, 
-          RouteGenerator.HOME_ROUTE, 
-          (_) => false
-        );
+      //Salve user data
+      Firestore dataBase = Firestore.instance;
+
+      dataBase.collection("users")
+      .document( firebaseUser.uid )
+      .setData( user.toMap() );
+
+      Navigator.pushNamedAndRemoveUntil(
+        context, 
+        RouteGenerator.HOME_ROUTE, 
+        (_) => false
+      );
     })/*.catchError((error){
 
     })*/;

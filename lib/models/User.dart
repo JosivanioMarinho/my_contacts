@@ -6,6 +6,16 @@ class User{
 
   User();
 
+  Map<String, dynamic> toMap(){
+
+    Map<String, dynamic> map = {
+      "name" : this.name,
+      "email" : this.email
+    };
+
+    return map;
+  }
+
   String get name => _name;
 
   set name(String name){
