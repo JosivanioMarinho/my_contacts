@@ -16,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _controllerPassword = TextEditingController();
   LoginUserController _loginUser = LoginUserController();
   String _errorMessage = "";
+  var _scafoldKey = GlobalKey<ScaffoldState>();
 
   _validateFields(){
     
@@ -64,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scafoldKey,
       body: Container(
         decoration: BoxDecoration(color: Color(0xff1D3557)),
         padding: EdgeInsets.all(16),
@@ -141,8 +143,14 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        onTap: (){
+                        onTap: () async {
                           _validateFields();
+                          final snackbar = SnackBar(
+                            content: Text(_errorMessage, 
+                            style: TextStyle(fontSize: 16),
+                            ),
+                          );
+                          _scafoldKey.currentState.showSnackBar(snackbar);
                         },
                       ),
                       SizedBox(height: 10,),
@@ -173,15 +181,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(height: 10,),
-                      Center(
-                        child: Text(
-                          _errorMessage, 
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

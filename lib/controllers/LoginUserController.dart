@@ -31,7 +31,7 @@ class LoginUserController{
   Future checkLogin(BuildContext context) async {
 
     FirebaseAuth auth = FirebaseAuth.instance;
-    //auth.signOut();
+    auth.signOut();
 
     FirebaseUser user = await auth.currentUser();
     if( user != null ){

@@ -13,8 +13,9 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _controllerName = TextEditingController();
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerPassword = TextEditingController();
-
   String _errorMessage = "";
+  var _scafoldKey = GlobalKey<ScaffoldState>();
+
 
   _validateFields(){
     
@@ -62,6 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scafoldKey,
       body: Container(
         decoration: BoxDecoration(color: Color(0xff1D3557)),
         padding: EdgeInsets.all(16),
@@ -143,20 +145,17 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                         ),
-                        onTap: (){
+                        onTap: () async{
                           _validateFields();
+                          final snackbar = SnackBar(
+                            content: Text(_errorMessage, 
+                              style: TextStyle(fontSize: 16),
+                            )
+                          );
+                          _scafoldKey.currentState.showSnackBar(snackbar);
                         },
                       ),
                       SizedBox(height: 10,),
-                      Center(
-                        child: Text(
-                          _errorMessage, 
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
