@@ -45,6 +45,33 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 17,
               ),
             ),
+            onTap: (){
+              showDialog(
+                context: context,
+                builder: (context){
+
+                  return AlertDialog(
+                    title: Text(title),
+                    content: SingleChildScrollView(
+                        child: Container(
+                          height: 120,
+                          child: Column(
+                            children: <Widget>[
+                              //Informations
+                            ],
+                          ),
+                        ),
+                      ),
+                    actions: <Widget>[
+                      FlatButton(
+                        onPressed: ()=> Navigator.pop(context), 
+                        child: Text("Close"),
+                      ),
+                    ],
+                  );
+                }
+              );
+            },
           );
         }
       ),
@@ -63,6 +90,61 @@ class _HomePageState extends State<HomePage> {
             ),
           )
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.person_add,
+          color: Colors.white,
+        ),
+        backgroundColor: Color(0xff1D3557),
+        onPressed: (){
+          showDialog(
+            context: context,
+            builder: (context){
+
+              return AlertDialog(
+                title: Text("Add contact"),
+                content: SingleChildScrollView(
+                    child: Container(
+                      height: 120,
+                      child: Column(
+                        children: <Widget>[
+                          TextField(
+                            //controller: ,
+                            decoration: InputDecoration(
+                              labelText: "Name"
+                            ),
+                          ),
+                          TextField(
+                            //controller: ,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              labelText: "E-mail"
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: ()=> Navigator.pop(context), 
+                    child: Text("Cancel"),
+                  ),
+                  FlatButton(
+                    onPressed: (){
+
+                      //Save contact!
+
+                      Navigator.pop(context);
+                    }, 
+                    child: Text("Save"),
+                  ),
+                ],
+              );
+            }
+          );
+        },
       ),
     );
   }
