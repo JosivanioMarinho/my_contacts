@@ -13,12 +13,8 @@ class SaveContactController {
 
     if( name.isNotEmpty && idUser.isNotEmpty ) { 
 
-      String idContatc = DateTime.now().microsecondsSinceEpoch.toString();
-
       Firestore dataBase = Firestore.instance;
-      dataBase.collection("contacts")
-      .document(idUser)
-      .collection(idContatc)
+      dataBase.collection(idUser)
       .add(contact.toMap());
     }else{
       MESSAGE = "Fill up the name field!";

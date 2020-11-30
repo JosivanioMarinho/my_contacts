@@ -1,6 +1,7 @@
 class Contact{
 
   String _idUser;
+  String _idContact;
   String _name;
   String _phoneNumber;
   String _email;
@@ -22,6 +23,12 @@ class Contact{
 
   set idUser(String idUser){
     _idUser = idUser;
+  }
+
+  String get idContact => _idContact;
+
+  set idContact(String idContact){
+    _idContact = idContact;
   }
 
   String get name => _name;

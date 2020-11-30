@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:meus_contatos/controllers/SaveContactController.dart';
@@ -16,6 +17,8 @@ class _HomePageState extends State<HomePage> {
   TextEditingController _controllerEmail = TextEditingController();
   var _scafoldKey = GlobalKey<ScaffoldState>();
   String _idUserLoged;
+  Firestore dataBase = Firestore.instance;
+  Contact contact = Contact();
 
   List<String> contatcList = [
     "João",
@@ -50,61 +53,88 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-    var listContacts = Expanded(
-      child: ListView.builder(
-        itemCount: contatcList.length,
-        itemBuilder: (context, index){
+    var stream = StreamBuilder(
+      stream: dataBase.collection(_idUserLoged).snapshots(),
+      builder: (context, snapshot){
+        switch(snapshot.connectionState){
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+            break;
+          case ConnectionState.active:
+          case ConnectionState.done:
+
+            QuerySnapshot querySnapshot = snapshot.data;
+
+            if( snapshot.hasError ){
+              return Text("Error loading contacts, try later");
+            }else{
+
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: querySnapshot.documents.length,
+                  itemBuilder: (context, index){
           
-          String title = contatcList[index];
-          String letter = title[0];
+                    List<DocumentSnapshot> contacts = querySnapshot.documents.toList();
+                    DocumentSnapshot item = contacts[index];
+                     
+                    String title = item["name"];
+                    String letter = title[0];
 
-          return ListTile(
-            contentPadding: EdgeInsets.only(left: 16 ,top: 10, right: 16),
-            leading: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 25,
-              child: Text(
-                letter,
-                style: TextStyle(color: Colors.grey[900], fontSize: 18),
-              ),
-            ),
-            title: Text(
-              title, 
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-              ),
-            ),
-            onTap: (){
-              showDialog(
-                context: context,
-                builder: (context){
-
-                  return AlertDialog(
-                    title: Text(title),
-                    content: SingleChildScrollView(
-                        child: Container(
-                          height: 120,
-                          child: Column(
-                            children: <Widget>[
-                              //Informations
-                            ],
-                          ),
+                    return ListTile(
+                      contentPadding: EdgeInsets.only(left: 16 ,top: 10, right: 16),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 25,
+                        child: Text(
+                          letter,
+                          style: TextStyle(color: Colors.grey[900], fontSize: 18),
                         ),
                       ),
-                    actions: <Widget>[
-                      FlatButton(
-                        onPressed: ()=> Navigator.pop(context), 
-                        child: Text("Close"),
+                      title: Text(
+                        item["name"],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                        ),
                       ),
-                    ],
-                  );
-                }
+                      onTap: (){
+                        showDialog(
+                          context: context,
+                          builder: (context){
+
+                            return AlertDialog(
+                              title: Text(item["name"]),
+                              content: SingleChildScrollView(
+                                  child: Container(
+                                    height: 120,
+                                    child: Column(
+                                      children: <Widget>[
+                                        //Informations
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: ()=> Navigator.pop(context), 
+                                  child: Text("Close"),
+                                ),
+                              ],
+                            );
+                          }
+                        );
+                      },
+                    );
+                  }
+                ),
               );
-            },
-          );
+            }
+            break;
         }
-      ),
+      } 
     );
 
     return Scaffold(
@@ -116,7 +146,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: <Widget>[
                 CustomAppBar(),
-                listContacts,
+                stream,
               ],
             ),
           )
@@ -172,8 +202,10 @@ class _HomePageState extends State<HomePage> {
                   FlatButton(
                     onPressed: () async {
 
-                      Contact contact = Contact();
+                      String idContact =  DateTime.now().microsecondsSinceEpoch.toString();
+                      
                       contact.idUser      = _idUserLoged;
+                      contact.idContact   =  idContact;
                       contact.name        = _controllerName.text;
                       contact.phoneNumber = _controllerPhone.text;
                       contact.email       = _controllerEmail.text;
