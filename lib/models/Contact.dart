@@ -1,15 +1,33 @@
 class Contact{
 
-  String _contactName;
+  String _idUser;
+  String _name;
   String _phoneNumber;
   String _email;
 
   Contact();
 
-  String get contactName => _contactName;
+  Map<String, dynamic> toMap(){
 
-  set contactName(String contactName){
-    _contactName = contactName;
+    Map<String, dynamic> map = {
+      "name" : this.name,
+      "phoneNumber" : this.phoneNumber,
+      "email" : this.email
+    };
+
+    return map;
+  }
+
+  String get idUser => _idUser;
+
+  set idUser(String idUser){
+    _idUser = idUser;
+  }
+
+  String get name => _name;
+
+  set name(String name){
+    _name = name;
   }
 
   String get phoneNumber => _phoneNumber;
