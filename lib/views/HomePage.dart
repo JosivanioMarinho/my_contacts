@@ -17,31 +17,16 @@ class _HomePageState extends State<HomePage> {
   TextEditingController _controllerEmail = TextEditingController();
   var _scafoldKey = GlobalKey<ScaffoldState>();
   String _idUserLoged;
-  Firestore dataBase = Firestore.instance;
-  Contact contact = Contact();
-
-  List<String> contatcList = [
-    "João",
-    "Maria",
-    "Julia",
-    "Pedro",
-    "Carlinhos",
-    "Paulo",
-    "José",
-    "Rafaela",
-    "Juliana",
-    "Miguel",
-    "João Pedro",
-    "Carlos",
-    "Ricardo",
-    "Etc",
-  ];
+  Firestore _dataBase = Firestore.instance;
+  Contact _contact = Contact();
 
   _idUserFirebase() async {
 
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser user = await auth.currentUser();
-    _idUserLoged = user.uid;
+    setState(() {
+      _idUserLoged = user.uid;
+    });
   }
 
   @override
@@ -54,7 +39,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
 
     var stream = StreamBuilder(
-      stream: dataBase.collection(_idUserLoged).snapshots(),
+      stream: _dataBase.collection(_idUserLoged)
+      .orderBy("name")
+      .snapshots(),
       builder: (context, snapshot){
         switch(snapshot.connectionState){
           case ConnectionState.none:
@@ -79,54 +66,87 @@ class _HomePageState extends State<HomePage> {
           
                     List<DocumentSnapshot> contacts = querySnapshot.documents.toList();
                     DocumentSnapshot item = contacts[index];
+                    String idContact = item.documentID;
                      
                     String title = item["name"];
-                    String letter = title[0];
+                    String letter = title[0].toUpperCase();
+                    String phone = item["phoneNumber"];
+                    String email = item["email"];
+                    String key = DateTime.now().microsecondsSinceEpoch.toString();
 
-                    return ListTile(
-                      contentPadding: EdgeInsets.only(left: 16 ,top: 10, right: 16),
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 25,
-                        child: Text(
-                          letter,
-                          style: TextStyle(color: Colors.grey[900], fontSize: 18),
+                    return Dismissible(
+                      direction: DismissDirection.endToStart,
+                      key: Key(key),
+                      onDismissed: (direction) async{
+                      
+                        _dataBase.collection(_idUserLoged).document(idContact).delete();
+
+                        final snackbar = SnackBar(
+                        content: Text("Deleted!", 
+                        style: TextStyle(fontSize: 16),));
+                        _scafoldKey.currentState.showSnackBar(snackbar);
+                      },
+                      background: Container(
+                        color: Colors.red,
+                        padding: EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[Icon(Icons.delete, color: Colors.white,),],
                         ),
                       ),
-                      title: Text(
-                        item["name"],
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.only(left: 16 ,top: 10, right: 16),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 25,
+                          child: Text(
+                            letter,
+                            style: TextStyle(color: Colors.grey[900], fontSize: 18),
+                          ),
                         ),
-                      ),
-                      onTap: (){
-                        showDialog(
-                          context: context,
-                          builder: (context){
+                        title: Text(
+                          title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onTap: (){
+                          showDialog(
+                            context: context,
+                            builder: (context){
 
-                            return AlertDialog(
-                              title: Text(item["name"]),
-                              content: SingleChildScrollView(
-                                  child: Container(
-                                    height: 120,
-                                    child: Column(
-                                      children: <Widget>[
-                                        //Informations
-                                      ],
+                              return AlertDialog(
+                                title: Text(title),
+                                content: SingleChildScrollView(
+                                    child: Container(
+                                      height: 120,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          //Informations
+                                          Text("Phone: ${phone}", 
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          Text("E-mail: ${email}",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              actions: <Widget>[
-                                FlatButton(
-                                  onPressed: ()=> Navigator.pop(context), 
-                                  child: Text("Close"),
-                                ),
-                              ],
-                            );
-                          }
-                        );
-                      },
+                                actions: <Widget>[
+                                  FlatButton(
+                                    onPressed: ()=> Navigator.pop(context), 
+                                    child: Text("Close"),
+                                  ),
+                                ],
+                              );
+                            }
+                          );
+                        },
+                      ),
                     );
                   }
                 ),
@@ -204,20 +224,21 @@ class _HomePageState extends State<HomePage> {
 
                       String idContact =  DateTime.now().microsecondsSinceEpoch.toString();
                       
-                      contact.idUser      = _idUserLoged;
-                      contact.idContact   =  idContact;
-                      contact.name        = _controllerName.text;
-                      contact.phoneNumber = _controllerPhone.text;
-                      contact.email       = _controllerEmail.text;
+                      _contact.idUser      = _idUserLoged;
+                      _contact.idContact   =  idContact;
+                      _contact.name        = _controllerName.text;
+                      _contact.phoneNumber = _controllerPhone.text;
+                      _contact.email       = _controllerEmail.text;
 
                       //Save contact!
-                      SaveContactController.saveContact( contact );
+                      SaveContactController.saveContact( _contact );
 
                       _controllerName.text = "";
                       _controllerPhone.text = "";
                       _controllerEmail.text = "";
 
                       final snackbar = SnackBar(
+                        duration: Duration(seconds: 3),
                         content: Text(SaveContactController.MESSAGE, 
                         style: TextStyle(fontSize: 16),));
                       _scafoldKey.currentState.showSnackBar(snackbar);
